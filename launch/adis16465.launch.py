@@ -16,7 +16,6 @@ def generate_launch_description():
         "urdf",
         "adis16470_breakout.urdf"
     )
-    print(imu_urdf_file_path)
 
     imu_rviz_file_path = os.path.join(
         get_package_share_directory("adi_driver"),
@@ -69,13 +68,13 @@ def generate_launch_description():
         executable="adis16465_node",                                    # 実行ファイルの名前
         name="adis16465_node",                                          # ノードの名前
         namespace="imu",                                                # ノードのネームスペース
-        parameters=[                                                    # ノードのパラメータ
-            {"device": LaunchConfiguration("device"),
+        parameters=[{
+            "device": LaunchConfiguration("device"),
              "frame_id": LaunchConfiguration("frame_id"),
              "burst_read": LaunchConfiguration("burst_read"),
              "publish_temperature": LaunchConfiguration("publish_temperature"),
-             "rate": LaunchConfiguration("rate")}
-        ],
+             "rate": LaunchConfiguration("rate")
+        }],
         output="screen"                                                 # ターミナルにLogを出力する
     )
 
@@ -122,21 +121,12 @@ def generate_launch_description():
     )
 
     # すべてのLaunchの要素をLaunchDescriptionのインスタンスにまとめ、発火する
-    return LaunchDescription([
-        with_filter_arg,
-        with_rviz_arg,
-        with_plot_arg,
-        imu_device_arg,
-        frame_id_arg,
-        burst_read_arg,
-        publish_temperature_arg,
-        rate_arg,
-        publish_tf_arg,
-        publish_debug_topics_arg,
-        robot_state_publisher_node,
-        imu_node,
-        imu_filter_node,
-        rviz_node,
-        gyro_plot_node,
-        accl_plot_node
-    ])
+    name_dist = locals()
+    value_list = []
+    for name, value in name_dist:
+        if name.find("_arg" or "_node" or "_launch"):
+            value_list.append(value)
+            
+    return LaunchDescription(
+        value_list
+    )

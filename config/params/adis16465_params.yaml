@@ -1,0 +1,7 @@
+/imu/adis16465_node:
+  ros__parameters:
+    device: "/dev/ttyACM0"
+    frame_id: imu
+    burst_read: false
+    publish_temperature: false
+    rate: 100.0

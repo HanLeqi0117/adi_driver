@@ -105,21 +105,12 @@ def generate_launch_description():
         condition=IfCondition(LaunchConfiguration("with_plot"))
     )
 
-    return LaunchDescription([
-        with_filter_arg,
-        with_rviz_arg,
-        with_plot_arg,
-        imu_device_arg,
-        frame_id_arg,
-        burst_read_arg,
-        publish_temperature_arg,
-        rate_arg,
-        publish_tf_arg,
-        publish_debug_topics_arg,
-        robot_state_publisher_node,
-        imu_node,
-        imu_filter_node,
-        rviz_node,
-        gyro_plot_node,
-        accl_plot_node
-    ])
+    name_dist = locals()
+    value_list = []
+    for name, value in name_dist:
+        if name.find("_arg" or "_node" or "_launch"):
+            value_list.append(value)
+            
+    return LaunchDescription(
+        value_list
+    )
